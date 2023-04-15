@@ -17,46 +17,40 @@ function transform(arr) {
   if (!Array.isArray(arr)) {
     throw new Error("'arr' parameter must be an instance of the Array!");
   }
-  const arrWithDiscards = [...arr];
-  arrWithDiscards.forEach((el, i) => {
-    if (el === '--discard-next') {
-      if (i < arrWithDiscards.length - 1) {
-        arrWithDiscards[i + 1] = null;
-      }
-      arrWithDiscards[i] = null;
-    } else if (el === '--discard-prev') {
-      if (i !== 0) {
-        arrWithDiscards[i - 1] = null;
-      }
-      arrWithDiscards[i] = null;
-    }
-  })
-  console.log(arrWithDiscards)
+
   const res = [];
+  let nextDiscarded = false;
 
-  arrWithDiscards.forEach((el, i) => {
-    if (el === '--double-next') {
-      if (arrWithDiscards[i + 1]) {
-        res.push(arrWithDiscards[i + 1])
-      }
-      return;
+  for (let i = 0; i < arr.length; i++) {
+    const current = arr[i];
+    switch (current) {
+      case '--discard-next':
+        i++;
+        nextDiscarded = true;
+        continue; // go to next loop iteration, break only exits from switch not loop;
+      case '--double-next':
+        if (i < arr.length - 1) {
+          res.push(arr[i + 1]);
+        }
+        break
+      case '--discard-prev':
+        if (res.length && !nextDiscarded) {
+          res.pop();
+        }
+        break;
+      case '--double-prev':
+        if (i >= 1 && !nextDiscarded) {
+          res.push(arr[i - 1])
+        }
+        break;
+      default:
+        res.push(current)
     }
-    if (el === '--double-prev') {
-      if (arrWithDiscards[i - 1]) {
-        const prev = res[res.length - 1];
-        res.push(prev);
-      }
-      return;
-    }
-    if (el !== null) {
-      res.push(el);
-    }
-  })
-
+    nextDiscarded = false;
+  }
   return res;
 }
 
 module.exports = {
   transform,
 };
-

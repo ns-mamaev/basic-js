@@ -15,7 +15,10 @@ function getSeason(date) {
   if (date === undefined) {
     return 'Unable to determine the time of year!';
   }
-  if (!(date instanceof Date)) {
+  const isValidDate = date instanceof Date 
+    && Object.getPrototypeOf(date).toString === date.toString;
+
+  if (!isValidDate) {
     throw new Error('Invalid date!');
   }
   const month = date.getMonth();
@@ -25,7 +28,7 @@ function getSeason(date) {
   if (month < 5) {
     return 'spring';
   }
-  if (month < 7) {
+  if (month < 8) {
     return 'summer';
   }
   return 'autumn';

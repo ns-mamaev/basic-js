@@ -25,12 +25,28 @@ function repeater(str, options) {
   } = options;
   
   const additionalStr = addition !== undefined
-    ? [...Array(additionRepeatTimes)].map(() => addition.toString()).join(additionSeparator)
+    ? [...Array(additionRepeatTimes)].map(() => String(addition)).join(additionSeparator)
     : '';
   
-  return [...Array(repeatTimes)].map(() => str.toString() + additionalStr).join(separator);
+  return [...Array(repeatTimes)].map(() => String(str) + additionalStr).join(separator);
 }
 
 module.exports = {
   repeater
 };
+
+function oldRepeater(str, options) {
+  const {
+    repeatTimes = 1,
+    separator = '+',
+    addition,
+    additionRepeatTimes = 1,
+    additionSeparator = '|'
+  } = options;
+  
+  const additionalStr = addition !== undefined
+    ? [...Array(additionRepeatTimes)].map(() => addition.toString()).join(additionSeparator)
+    : '';
+  
+  return [...Array(repeatTimes)].map(() => str.toString() + additionalStr).join(separator);
+}
